@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Single-File Site • Portfolio</title>
+  <meta name="description" content="A single-file website that includes HTML, CSS, and JavaScript in one document." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --surface: #111730;
+      --text: #e7ecf3;
+      --muted: #9aa6b2;
+      --accent: #7c5cff;
+      --accent-2: #58c4dc;
+      --ring: rgba(124,92,255,.4);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    [data-theme="light"]{
+      --bg: #f7f9fc;
+      --surface: #ffffff;
+      --text: #111827;
+      --muted: #4b5563;
+      --accent: #6d28d9;
+      --accent-2: #0ea5e9;
+      --ring: rgba(14,165,233,.35);
+      --shadow: 0 10px 25px rgba(17,24,39,.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 120% -10%, rgba(124,92,255,.15), transparent 50%),
+                  radial-gradient(800px 500px at -20% 10%, rgba(14,165,233,.12), transparent 50%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--bg) 92%, transparent);
+      border-bottom: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 10px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .3px; }
+    .brand-logo { width: 34px; height: 34px; border-radius: 10px; background:
+      conic-gradient(from 220deg, var(--accent), var(--accent-2)); box-shadow: var(--shadow);
+    }
+    .nav ul { list-style: none; display: flex; gap: 18px; margin: 0; padding: 0; }
+    .nav a {
+      padding: 8px 12px; border-radius: 999px; font-weight: 600; font-size: .95rem; color: var(--text);
+    }
+    .nav a:hover, .nav a:focus { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+
+    .actions { display: flex; gap: 10px; align-items: center; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 14px; border-radius: 12px; border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--surface) 92%, transparent), color-mix(in oklab, var(--surface) 96%, transparent));
+      color: var(--text); font-weight: 700; cursor: pointer;
+      transition: transform .12s ease, box-shadow .2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+    .btn-primary { background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 72%, white 10%), var(--accent)); border: none; }
+
+    /* Hero */
+    .hero { padding: 56px 0 32px; }
+    .hero .grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: center; }
+    .hero h1 { font-size: clamp(1.9rem, 2.4vw + 1rem, 3rem); line-height: 1.2; margin: 0 0 10px; }
+    .lead { font-size: 1.05rem; color: var(--muted); margin-bottom: 22px; }
+    .badge { display: inline-block; padding: 6px 10px; border-radius: 999px; font-weight: 700; background: color-mix(in oklab, var(--accent) 12%, var(--surface)); color: var(--accent); }
+
+    .hero-card {
+      background: linear-gradient(180deg, color-mix(in oklab, var(--surface) 88%, transparent), var(--surface));
+      border: 1px solid color-mix(in oklab, var(--text) 14%, transparent);
+      border-radius: 20px; padding: 18px; box-shadow: var(--shadow);
+    }
+    .hero-card pre { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: .95rem; color: var(--text); }
+
+    /* Sections */
+    section { padding: 42px 0; }
+    .section-title { font-size: 1.6rem; margin: 0 0 18px; }
+    .grid-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card {
+      background: var(--surface); border: 1px solid color-mix(in oklab, var(--text) 10%, transparent);
+      border-radius: 18px; padding: 18px; box-shadow: var(--shadow);
+    }
+    .tag { display: inline-block; padding: 6px 10px; border-radius: 999px; background: color-mix(in oklab, var(--accent-2) 12%, var(--surface)); color: var(--accent-2); font-weight: 700; font-size: .85rem; }
+
+    /* Projects */
+    .project {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center;
+      border: 1px solid color-mix(in oklab, var(--text) 10%, transparent); border-radius: 18px; padding: 16px; background: var(--surface);
+    }
+    .project h3 { margin: 0 0 6px; }
+    .project p { margin: 0 0 10px; color: var(--muted); }
+
+    /* Contact */
+    form { display: grid; gap: 12px; max-width: 640px; }
+    label { font-weight: 700; }
+    input, textarea {
+      width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid color-mix(in oklab, var(--text) 14%, transparent);
+      background: color-mix(in oklab, var(--surface) 94%, transparent); color: var(--text);
+    }
+    input:focus, textarea:focus { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+    textarea { min-height: 140px; resize: vertical; }
+
+    /* Footer */
+    footer { padding: 32px 0 60px; color: var(--muted); text-align: center; }
+
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero .grid { grid-template-columns: 1fr; }
+      .grid-cards { grid-template-columns: 1fr 1fr; }
+      .project { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px){
+      .nav ul { display: none; }
+      .grid-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#home" class="brand" aria-label="Home">
+        <span class="brand-logo" aria-hidden="true"></span>
+        <span>DevOps Portfolio</span>
+      </a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="actions">
+        <button class="btn" id="themeToggle" aria-pressed="false" aria-label="Toggle theme">🌓 Theme</button>
+        <button class="btn btn-primary" id="downloadCV">⬇️ Resume</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="home" class="container">
+    <section class="hero">
+      <div class="grid">
+        <div>
+          <span class="badge">Open to Opportunities</span>
+          <h1>Hi, I'm <span style="color:var(--accent)">Nijen Kusma</span> — DevOps Engineer</h1>
+          <p class="lead">B.Sc. IT student at LBEF College • RHCSA & RHCE certified • Completed CCNA & DevOps courses • Hands-on with GitHub, Docker, AWS, Linux, Nginx, and CI/CD.</p>
+          <div style="display:flex; gap:10px; flex-wrap: wrap;">
+            <a class="btn" href="#projects">View Projects</a>
+            <a class="btn" href="#contact">Contact Me</a>
+          </div>
+        </div>
+        <div class="hero-card" aria-label="Code preview">
+<pre><code># CI pipeline snippet (YAML)
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  script:
+    - docker build -t app:latest .
+
+test:
+  script:
+    - docker run --rm app:latest pytest
+
+deploy:
+  environment: production
+  script:
+    - kubectl apply -f k8s/
+</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2 class="section-title">About</h2>
+      <div class="card">
+        <p>
+          I'm a DevOps enthusiast who loves bridging development and operations to ship reliable software faster. I enjoy
+          designing automated CI/CD pipelines, containerizing applications, and running them securely in the cloud. When I'm not tinkering with clusters, you'll find me documenting systems or teaching teammates the magic of version control.
+        </p>
+      </div>
+    </section>
+
+    <section id="skills">
+      <h2 class="section-title">Skills</h2>
+      <div class="grid-cards">
+        <div class="card">
+          <div class="tag">Core</div>
+          <ul>
+            <li>Linux (Ubuntu, CentOS), Bash</li>
+            <li>Git & GitHub, Git Flow</li>
+            <li>Networking basics (TCP/IP, DNS)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="tag">DevOps</div>
+          <ul>
+            <li>Docker, Compose</li>
+            <li>CI/CD (GitHub Actions)</li>
+            <li>Monitoring (Zabbix, Prometheus basics)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="tag">Cloud</div>
+          <ul>
+            <li>AWS (EC2, S3, IAM)</li>
+            <li>NGINX, SSL/TLS</li>
+            <li>Basic Kubernetes & Helm</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2 class="section-title">Projects</h2>
+      <article class="project">
+        <div>
+          <h3>AI Docs Q&A (Tiny Llama)</h3>
+          <p>Hosted a lightweight LLM with 11,000 PDFs, optimized latency using GPU acceleration and caching.</p>
+          <a class="btn" href="#" onclick="alert('Demo link placeholder'); return false;">Demo</a>
+        </div>
+        <div>
+          <div class="card">
+            <strong>Stack</strong>
+            <ul>
+              <li>Python API + Docker</li>
+              <li>NGINX reverse proxy + SSL</li>
+              <li>GPU-enabled inference</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <div style="height:12px"></div>
+
+      <article class="project">
+        <div>
+          <h3>Observability Lab</h3>
+          <p>Deployed Zabbix server + agents across VMs to track CPU load, memory, and network metrics with alerting.</p>
+          <a class="btn" href="#" onclick="alert('Repo link placeholder'); return false;">Repository</a>
+        </div>
+        <div>
+          <div class="card">
+            <strong>Highlights</strong>
+            <ul>
+              <li>SNMP on Sophos XGS 2100</li>
+              <li>Dashboards & triggers</li>
+              <li>Ansible for agent rollout</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title">Contact</h2>
+      <form id="contactForm" novalidate>
+        <div>
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" placeholder="Your name" required />
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" required />
+        </div>
+        <div>
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell me about your project" required></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Send Message</button>
+        <p id="formMsg" role="status" aria-live="polite" style="margin:6px 0 0; color: var(--muted);"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <small>© <span id="year"></span> Nijen Kusma — Built with pure HTML, CSS & JS in one file.</small>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth anchor scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href');
+        const el = document.querySelector(id);
+        if(el){ e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    });
+
+    // Theme toggle (stores preference)
+    const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    const initialTheme = savedTheme || (prefersLight ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', initialTheme);
+
+    const toggle = document.getElementById('themeToggle');
+    toggle.setAttribute('aria-pressed', initialTheme === 'light');
+    toggle.addEventListener('click', () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+      localStorage.setItem('theme', isLight ? 'dark' : 'light');
+      toggle.setAttribute('aria-pressed', String(!isLight));
+    });
+
+    // Download a simple resume as a text file
+    document.getElementById('downloadCV').addEventListener('click', () => {
+      const lines = [
+        'Nijen Kusma — DevOps Engineer',
+        'Email: you@example.com',
+        'LinkedIn: https://linkedin.com/in/your-handle',
+        '',
+        'Summary:',
+        'DevOps practitioner with RHCSA/RHCE, CCNA, and hands-on experience in CI/CD, Docker, and AWS.',
+        '',
+        'Skills:',
+        '- Linux, Git, Docker, Nginx, SSL/TLS',
+        '- GitHub Actions, Zabbix, basic Kubernetes',
+        '',
+        'Projects:',
+        '- AI Docs Q&A — Tiny Llama + 11k PDFs',
+        '- Observability Lab — Zabbix across VMs'
+      ].join('\n');
+      const blob = new Blob([lines], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'Nijen-Kusma-Resume.txt'; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Contact form (client-side validation only)
+    const form = document.getElementById('contactForm');
+    const formMsg = document.getElementById('formMsg');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      if(!data.name || !data.email || !data.message){
+        formMsg.textContent = 'Please fill out all fields.';
+        return;
+      }
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
+      if(!emailOk){ formMsg.textContent = 'Please enter a valid email.'; return; }
+      formMsg.textContent = 'Thanks! Your message has been staged locally (no server in this demo).';
+      form.reset();
+    });
+
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
